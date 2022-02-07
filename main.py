@@ -305,6 +305,27 @@ def settings():
         pygame.display.flip()
     return game_mode, int(input_boxes[0].text), int(input_boxes[1].text), int(input_boxes[2].text), int(input_boxes[3].text)
 
+def draw_grid(board, screen):
+    for row in range(board.grid_size):
+        for col in range(board.grid_size):
+            if board.grid[row][col] == 'x':
+                color = ORANGE
+                text = 'x'
+            elif board.grid[row][col] == "o":
+                color = PURPLE
+                text = 'o'
+            else:
+                text = ''
+                color = GRAY
+            x = col * board.block_size + (col + 1) * board.gap
+            y = row * board.block_size + (row + 1) * board.gap
+            pygame.draw.rect(screen, color, (x, y, board.block_size, board.block_size))
+            font = pygame.font.SysFont('comicsans', board.block_size)
+            text = font.render(text, True, BLACK)
+            screen.blit(text,
+                        (x + (board.block_size / 2 - text.get_width() / 2),
+                         y + (board.block_size / 3 - text.get_height() / 2)))
+
 def player_vs_player(board):
     # создаем игру и окно
     pygame.init()
@@ -354,24 +375,7 @@ def player_vs_player(board):
                     b_restart.active = True
 
         # отрисовываем ячейки в соответсвии с их содержимым
-        for row in range(board.grid_size):
-            for col in range(board.grid_size):
-                if board.grid[row][col] == 'x':
-                    color = ORANGE
-                    text = 'x'
-                elif board.grid[row][col] == "o":
-                    color = PURPLE
-                    text = 'o'
-                else:
-                    text = ''
-                    color = GRAY
-                x = col * board.block_size + (col + 1) * board.gap
-                y = row * board.block_size + (row + 1) * board.gap
-                pygame.draw.rect(screen, color, (x, y, board.block_size, board.block_size))
-                font = pygame.font.SysFont('comicsans', board.block_size)
-                text = font.render(text, True, BLACK)
-                screen.blit(text,
-                            (x + (board.block_size / 2 - text.get_width() / 2), y + (board.block_size / 3 - text.get_height() / 2)))
+        draw_grid(board, screen)
 
         b_restart.draw(screen, board.block_size)
 
@@ -433,25 +437,7 @@ def player_vs_pc(board):
                     queue = 0
 
         # отрисовываем ячейки в соответсвии с их содержимым
-        for row in range(board.grid_size):
-            for col in range(board.grid_size):
-                if board.grid[row][col] == 'x':
-                    color = ORANGE
-                    text = 'x'
-                elif board.grid[row][col] == "o":
-                    color = PURPLE
-                    text = 'o'
-                else:
-                    text = ''
-                    color = GRAY
-                x = col * board.block_size + (col + 1) * board.gap
-                y = row * board.block_size + (row + 1) * board.gap
-                pygame.draw.rect(screen, color, (x, y, board.block_size, board.block_size))
-                font = pygame.font.SysFont('comicsans', board.block_size)
-                text = font.render(text, True, BLACK)
-                screen.blit(text,
-                            (x + (board.block_size / 2 - text.get_width() / 2),
-                             y + (board.block_size / 3 - text.get_height() / 2)))
+        draw_grid(board, screen)
 
         b_restart.draw(screen, board.block_size)
 
@@ -514,25 +500,7 @@ def pc_vs_ps(board):
                         board.win(board.grid[row][col])
                         queue = 0
 
-        for row in range(board.grid_size):
-            for col in range(board.grid_size):
-                if board.grid[row][col] == 'x':
-                    color = ORANGE
-                    text = 'x'
-                elif board.grid[row][col] == "o":
-                    color = PURPLE
-                    text = 'o'
-                else:
-                    text = ''
-                    color = GRAY
-                x = col * board.block_size + (col + 1) * board.gap
-                y = row * board.block_size + (row + 1) * board.gap
-                pygame.draw.rect(screen, color, (x, y, board.block_size, board.block_size))
-                font = pygame.font.SysFont('comicsans', board.block_size)
-                text = font.render(text, True, BLACK)
-                screen.blit(text,
-                            (x + (board.block_size / 2 - text.get_width() / 2),
-                             y + (board.block_size / 3 - text.get_height() / 2)))
+        draw_grid(board, screen)
 
         b_restart.draw(screen, board.block_size)
 
