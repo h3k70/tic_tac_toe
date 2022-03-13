@@ -52,7 +52,23 @@ class Button():
         self.color = DARK_ORANGE
         return False
 
-# Хотел сделать отдельный класс игрока, но немного не успеваю в срок
+class Switch_button(Button):
+    def isOver(self, pos):
+        if pos[0] > self.x and pos[0] < self.x + self.w:
+            if pos[1] > self.y and pos[1] < self.y + self.h:
+                return True
+        return False
+
+    def switch(self):
+        if self.active == True:
+            self.active = False
+            self.color = DARK_ORANGE
+        else:
+            self.active = True
+            self.color = ORANGE
+
+
+# Тут должен был быть класс игрока. Но его не будет.
 """"
 class player():
     def __init__(self, sing='x'):
@@ -238,10 +254,11 @@ def settings():
     input_point = InputBox(font, 400, 0, 140, 32, '5')
     input_boxes = [input_grid_size, input_block_size, input_gap, input_point]
 
-    b_start_pvp = Button((450), (480 - 100), 150, 60, "Player vs Player")
-    b_start_pvpc = Button((250), (480 - 100), 150, 60, "Player vs PC")
-    b_start_pcvpc = Button((50), (480 - 100), 150, 60, "PC vs PC")
-    buttons = [b_start_pvp, b_start_pvpc, b_start_pcvpc]
+    b_start_pvp = Button(450, (480 - 100), 150, 60, "Player vs Player")
+    b_start_pvpc = Button(250, (480 - 100), 150, 60, "Player vs PC")
+    b_start_pcvpc = Button(50, (480 - 100), 150, 60, "PC vs PC")
+    b_reverse = Switch_button(20, 100, 100, 50, "reverse")
+    buttons = [b_start_pvp, b_start_pvpc, b_start_pcvpc, b_reverse]
 
     # цикл игры
     running = True
@@ -265,12 +282,14 @@ def settings():
                 elif b_start_pcvpc.isOver(pygame.mouse.get_pos()):
                     game_mode = "pc vs pc"
                     running = False
-
+                elif b_reverse.isOver(pygame.mouse.get_pos()):
+                    b_reverse.switch()
             # подсветка кнопок
             elif event.type == pygame.MOUSEMOTION:
                 for button in buttons:
                     if button.isOver(pygame.mouse.get_pos()):
-                        button.active = True
+                        pass
+                        #button.active = True
 
         for box in input_boxes:
             box.update()
@@ -303,7 +322,7 @@ def settings():
         screen.blit(text4, (170 - 140, 0))
 
         pygame.display.flip()
-    return game_mode, int(input_boxes[0].text), int(input_boxes[1].text), int(input_boxes[2].text), int(input_boxes[3].text)
+    return game_mode, int(input_boxes[0].text), int(input_boxes[1].text), int(input_boxes[2].text), int(input_boxes[3].text), b_reverse.active
 
 def draw_grid(board, screen):
     for row in range(board.grid_size):
@@ -511,9 +530,9 @@ def pc_vs_ps(board):
 
 def main():
     # Получение настроек из settings
-    game_mode, grid_size, block_size, gap, point = settings()
+    game_mode, grid_size, block_size, gap, point, reverse = settings()
 
-    board = Board(grid_size, block_size, gap, point, reverse=True)
+    board = Board(grid_size, block_size, gap, point, reverse)
 
     if game_mode == "player vs player":
         player_vs_player(board)
